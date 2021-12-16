@@ -86,7 +86,18 @@ int main()
     //lv_actCmd.AddCmd_CustomMessage(148, 0, C_SET, V_DOWN, lv_payload, lv_payLoadLen);
 
     //...更多命令...
-    //
+	// --> 示例：客户化命令，继电器开关（e.g. 空开控制）
+    const UC lv_payload[] = {0x01};		// ModBus SlaveID
+    const UC lv_payLoadLen = sizeof(lv_payload);
+    lv_actCmd.AddCmd_CustomMessage(185, 0, C_SET, V_RELAY_ON, lv_payload, lv_payLoadLen);
+    lv_actCmd.AddCmd_CustomMessage(185, 0, C_SET, V_RELAY_OFF, lv_payload, lv_payLoadLen);
+
+	// --> 示例：客户化命令，ModBus写寄存器
+    // [addr][regH][regL][len]...
+    //const UC lv_payload[] = {0x01, 0x9E, 0x10, 0x01, 0x00, 0x01};
+    //const UC lv_payload[] = {0x01, 0x9E, 0x10, 0x01, 0x00, 0x04};
+    //const UC lv_payLoadLen = sizeof(lv_payload);
+    //lv_actCmd.AddCmd_CustomMessage(185, 0, C_SET, V_MODBUS_WRITE, lv_payload, lv_payLoadLen);
     
     //------------------------------------------------------------------
     // Step 3: 生成消息
