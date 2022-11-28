@@ -6,10 +6,10 @@ CActCmdInterface::CActCmdInterface()
     m_pCmdList = (cmdItem_t *)(m_msg + SCMSG_HEADER_LEN);
 }
 
-// æ¥å£åˆå§‹åŒ–ï¼šæ¯æ¬¡ç”Ÿæˆæ–°çš„act-cmdå‘½ä»¤åˆ—è¡¨å‰è°ƒç”¨
+// ½Ó¿Ú³õÊ¼»¯£ºÃ¿´ÎÉú³ÉĞÂµÄact-cmdÃüÁîÁĞ±íÇ°µ÷ÓÃ
 void CActCmdInterface::Init(const UC _uid, const UC _cmdCnt)
 {
-    // æ•°æ®åˆå§‹åŒ–
+    // Êı¾İ³õÊ¼»¯
     memset(m_msg, 0x00, sizeof(m_msg));
     memset(m_strOutput, 0x00, sizeof(m_strOutput));    
     m_msg[0] = ACT_CMD_MSG_HEAD_0;
@@ -26,275 +26,280 @@ void CActCmdInterface::Init(const UC _uid, const UC _cmdCnt)
 
 /***************************************************************
 * @func		AddCmd_SetState
-* @brief    æ·»åŠ å‘½ä»¤ï¼šå¼€å…³çŠ¶æ€æ”¹å˜å‘½ä»¤
+* @brief    Ìí¼ÓÃüÁî£º¿ª¹Ø×´Ì¬¸Ä±äÃüÁî
 * @param
-*   _nidï¼šèŠ‚ç‚¹IDï¼Œå…·ä½“èŠ‚ç‚¹æˆ–è€…255ï¼›255è¡¨ç¤ºå¹¿æ’­ï¼Œè¿™æ—¶é€šè¿‡NodeTypeç­›é€‰ç›®æ ‡èŠ‚ç‚¹
-*   _typeï¼šå‘½ä»¤ç±»å‹ï¼ŒåŒ…æ‹¬ï¼šV_STATUS, V_UP, V_DOWN, V_STOP, V_RELAY_ON, V_RELAY_OFF, V_RELAY_MAPç­‰
-*   _stateï¼šå¼€å…³çŠ¶æ€å€¼
-*   _delayUnitï¼šå»¶æ—¶æ“ä½œå•ä½ï¼š0-æ— ï¼Œ1-ç§’ï¼Œ2-åˆ†é’Ÿï¼Œ3-å°æ—¶ï¼›
-*   _delayTimeï¼šå»¶æ—¶æ“ä½œæ—¶é—´ã€‚æ³¨æ„ï¼šç›®å‰ä»…å¯¹ç¯æ§èŠ‚ç‚¹æœ‰æ•ˆ
-*   _ntï¼šèŠ‚ç‚¹ç±»å‹(Node Type)ï¼Œä»…å½“_nid=255æ—¶æœ‰æ•ˆï¼Œé»˜è®¤ä¸º0
-*   _tpNumï¼š'tp'åˆ—è¡¨é•¿åº¦ï¼ˆNodeType æˆ– DevTypeï¼‰ï¼Œ0 åˆ° 4ï¼Œé»˜è®¤ä¸º0
-*   _tpListï¼š'tp'åˆ—è¡¨æŒ‡é’ˆï¼Œé»˜è®¤ä¸ºç©º
+*   _nid£º½ÚµãID£¬¾ßÌå½Úµã»òÕß255£»255±íÊ¾¹ã²¥£¬ÕâÊ±Í¨¹ıNodeTypeÉ¸Ñ¡Ä¿±ê½Úµã
+*   _type£ºÃüÁîÀàĞÍ£¬°üÀ¨£ºV_STATUS, V_RELAY_ON, V_RELAY_OFF, V_RELAY_MAPµÈ
+*   _state£º¿ª¹Ø×´Ì¬Öµ
+*   _delayUnit£ºÑÓÊ±²Ù×÷µ¥Î»£º0-ÎŞ£¬1-Ãë£¬2-·ÖÖÓ£¬3-Ğ¡Ê±£»
+*   _delayTime£ºÑÓÊ±²Ù×÷Ê±¼ä¡£×¢Òâ£ºÄ¿Ç°½ö¶ÔµÆ¿Ø½ÚµãÓĞĞ§
+*   _nt£º½ÚµãÀàĞÍ(Node Type)£¬½öµ±_nid=255Ê±ÓĞĞ§£¬Ä¬ÈÏÎª0
+*   _tpNum£º'tp'ÁĞ±í³¤¶È£¨NodeType »ò DevType£©£¬0 µ½ 4£¬Ä¬ÈÏÎª0
+*   _tpList£º'tp'ÁĞ±íÖ¸Õë£¬Ä¬ÈÏÎª¿Õ
 * @retval	
 ***************************************************************/
 void CActCmdInterface::AddCmd_SetState(const UC _nid, const UC _sid, const UC _type, const UC _state, const UC _delayUnit, const UC _delayTime, const UC _nt, const UC _tpNum, const UC *_tpList)
 {
-    // æŒ‡å‘å½“å‰å‘½ä»¤
+    // Ö¸Ïòµ±Ç°ÃüÁî
     cmdItem_t *lv_cmd = m_pCmdList + m_nCmdIndex;
 
-    lv_cmd->head.nid = _nid;                        // èŠ‚ç‚¹ID
-    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFå‘½ä»¤
-    rSet_ActCmd_rck(lv_cmd->head, 1);               // éœ€è¦å›åº”
-    lv_cmd->head.sensorType = _type;                // å‘½ä»¤ç±»å‹
-    lv_cmd->head.subID = _sid;                      // å­èŠ‚ç‚¹ID
-    lv_cmd->head.paramLen = sizeof(V_STATUS_t);     // å¼€å…³çŠ¶æ€æ”¹å˜å‘½ä»¤å‚æ•°é•¿åº¦
-    lv_cmd->body.status.sw = _state;
-    lv_cmd->body.status.delayopUnit = _delayUnit;
-    lv_cmd->body.status.delayopTime = _delayTime;
+    lv_cmd->head.nid = _nid;                        // ½ÚµãID
+    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFÃüÁî
+    rSet_ActCmd_rck(lv_cmd->head, 1);               // ĞèÒª»ØÓ¦
+    lv_cmd->head.sensorType = _type;                // ÃüÁîÀàĞÍ
+    lv_cmd->head.subID = _sid;                      // ×Ó½ÚµãID
+    if(_type == V_STATUS) {
+        lv_cmd->head.paramLen = sizeof(V_STATUS_t);     // ¿ª¹Ø×´Ì¬¸Ä±äÃüÁî²ÎÊı³¤¶È
+        lv_cmd->body.status.sw = _state;
+        lv_cmd->body.status.delayopUnit = _delayUnit;
+        lv_cmd->body.status.delayopTime = _delayTime;
+    } else {
+        lv_cmd->head.paramLen = 1;
+        lv_cmd->body.state = _state;
+    }
 
-    // èŠ‚ç‚¹ç±»å‹
+    // ½ÚµãÀàĞÍ
     lv_cmd->head.nodeType = (_nid == 255 ? _nt : 0);
 
-    // 'tp'åˆ—è¡¨
+    // 'tp'ÁĞ±í
     addTpList(_nid, lv_cmd, _tpNum, _tpList);
 
-    // ä¸‹ä¸€æ¡
+    // ÏÂÒ»Ìõ
     m_nCmdIndex++;
 }
 
 /***************************************************************
 * @func		AddCmd_ChangeScenario
-* @brief    æ·»åŠ å‘½ä»¤ï¼šåœºæ™¯åˆ‡æ¢å‘½ä»¤ï¼ˆæ­¤æ—¶NodeIDæ— ä½œç”¨ï¼‰
-* @param    _scenarioï¼šåœºæ™¯ID
+* @brief    Ìí¼ÓÃüÁî£º³¡¾°ÇĞ»»ÃüÁî£¨´ËÊ±NodeIDÎŞ×÷ÓÃ£©
+* @param    _scenario£º³¡¾°ID
 * @retval	
 ***************************************************************/
 void CActCmdInterface::AddCmd_ChangeScenario(const UC _scenario)
 {
-    // æŒ‡å‘å½“å‰å‘½ä»¤
+    // Ö¸Ïòµ±Ç°ÃüÁî
     cmdItem_t *lv_cmd = m_pCmdList + m_nCmdIndex;
 
-    lv_cmd->head.nid = 0;                           // èŠ‚ç‚¹ID
-    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFå‘½ä»¤
-    rSet_ActCmd_rck(lv_cmd->head, 1);               // éœ€è¦å›åº”
-    lv_cmd->head.sensorType = V_SCENE_ON;           // åˆ‡æ¢åœºæ™¯
-    lv_cmd->head.subID = 0;                         // å­èŠ‚ç‚¹IDï¼ˆç›®å‰ä¸ä½¿ç”¨ï¼‰
-    lv_cmd->head.paramLen = 1;                      // åœºæ™¯åˆ‡æ¢å‘½ä»¤å‚æ•°é•¿åº¦
+    lv_cmd->head.nid = 0;                           // ½ÚµãID
+    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFÃüÁî
+    rSet_ActCmd_rck(lv_cmd->head, 1);               // ĞèÒª»ØÓ¦
+    lv_cmd->head.sensorType = V_SCENE_ON;           // ÇĞ»»³¡¾°
+    lv_cmd->head.subID = 0;                         // ×Ó½ÚµãID£¨Ä¿Ç°²»Ê¹ÓÃ£©
+    lv_cmd->head.paramLen = 1;                      // ³¡¾°ÇĞ»»ÃüÁî²ÎÊı³¤¶È
     lv_cmd->body.scenario_id = _scenario;
 
-    // ä¸‹ä¸€æ¡
+    // ÏÂÒ»Ìõ
     m_nCmdIndex++;
 }
 
 /***************************************************************
 * @func		AddCmd_FanControl
-* @brief    æ·»åŠ å‘½ä»¤ï¼šé£æ‰‡æ§åˆ¶å‘½ä»¤
+* @brief    Ìí¼ÓÃüÁî£º·çÉÈ¿ØÖÆÃüÁî
 * @param
-*   _nidï¼šèŠ‚ç‚¹IDï¼Œå…·ä½“èŠ‚ç‚¹æˆ–è€…255ï¼›255è¡¨ç¤ºå¹¿æ’­ï¼Œè¿™æ—¶é€šè¿‡NodeTypeç­›é€‰ç›®æ ‡èŠ‚ç‚¹
-*   _speedï¼šé£æ‰‡å¼€å…³å’Œé£é€Ÿ
-*   _ntï¼šèŠ‚ç‚¹ç±»å‹(Node Type)ï¼Œä»…å½“_nid=255æ—¶æœ‰æ•ˆï¼Œé»˜è®¤ä¸º0
-*   _tpNumï¼š'tp'åˆ—è¡¨é•¿åº¦ï¼ˆNodeType æˆ– DevTypeï¼‰ï¼Œ0 åˆ° 4ï¼Œé»˜è®¤ä¸º0
-*   _tpListï¼š'tp'åˆ—è¡¨æŒ‡é’ˆï¼Œé»˜è®¤ä¸ºç©º
+*   _nid£º½ÚµãID£¬¾ßÌå½Úµã»òÕß255£»255±íÊ¾¹ã²¥£¬ÕâÊ±Í¨¹ıNodeTypeÉ¸Ñ¡Ä¿±ê½Úµã
+*   _speed£º·çÉÈ¿ª¹ØºÍ·çËÙ
+*   _nt£º½ÚµãÀàĞÍ(Node Type)£¬½öµ±_nid=255Ê±ÓĞĞ§£¬Ä¬ÈÏÎª0
+*   _tpNum£º'tp'ÁĞ±í³¤¶È£¨NodeType »ò DevType£©£¬0 µ½ 4£¬Ä¬ÈÏÎª0
+*   _tpList£º'tp'ÁĞ±íÖ¸Õë£¬Ä¬ÈÏÎª¿Õ
 * @retval	
 ***************************************************************/
 void CActCmdInterface::AddCmd_FanControl(const UC _nid, const UC _sid, const UC _speed, const UC _nt, const UC _tpNum, const UC *_tpList)
 {
-    // æŒ‡å‘å½“å‰å‘½ä»¤
+    // Ö¸Ïòµ±Ç°ÃüÁî
     cmdItem_t *lv_cmd = m_pCmdList + m_nCmdIndex;
 
-    lv_cmd->head.nid = _nid;                        // èŠ‚ç‚¹ID
-    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFå‘½ä»¤
-    rSet_ActCmd_rck(lv_cmd->head, 1);               // éœ€è¦å›åº”
-    lv_cmd->head.sensorType = V_FAN;                // å‘½ä»¤ç±»å‹
-    lv_cmd->head.subID = _sid;                      // å­èŠ‚ç‚¹ID
-    lv_cmd->head.paramLen = 1;                      // é£æ‰‡æ§åˆ¶å‘½ä»¤å‚æ•°é•¿åº¦
+    lv_cmd->head.nid = _nid;                        // ½ÚµãID
+    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFÃüÁî
+    rSet_ActCmd_rck(lv_cmd->head, 1);               // ĞèÒª»ØÓ¦
+    lv_cmd->head.sensorType = V_FAN;                // ÃüÁîÀàĞÍ
+    lv_cmd->head.subID = _sid;                      // ×Ó½ÚµãID
+    lv_cmd->head.paramLen = 1;                      // ·çÉÈ¿ØÖÆÃüÁî²ÎÊı³¤¶È
     lv_cmd->body.fan_speed = _speed;
 
-    // èŠ‚ç‚¹ç±»å‹
+    // ½ÚµãÀàĞÍ
     lv_cmd->head.nodeType = (_nid == 255 ? _nt : 0);
 
-    // 'tp'åˆ—è¡¨
+    // 'tp'ÁĞ±í
     addTpList(_nid, lv_cmd, _tpNum, _tpList);
 
-    // ä¸‹ä¸€æ¡
+    // ÏÂÒ»Ìõ
     m_nCmdIndex++;
 }
 
 /***************************************************************
 * @func		AddCmd_BRControl
-* @brief    æ·»åŠ å‘½ä»¤ï¼šè°ƒèŠ‚ç¯çš„äº®åº¦
+* @brief    Ìí¼ÓÃüÁî£ºµ÷½ÚµÆµÄÁÁ¶È
 * @param
-*   _nidï¼šèŠ‚ç‚¹IDï¼Œå…·ä½“èŠ‚ç‚¹æˆ–è€…255ï¼›255è¡¨ç¤ºå¹¿æ’­ï¼Œè¿™æ—¶é€šè¿‡NodeTypeç­›é€‰ç›®æ ‡èŠ‚ç‚¹
-*   _opï¼šæ§åˆ¶æ–¹å¼ï¼Œ0-è®¾ç½®äº®åº¦å€¼ï¼Œ1-å¢åŠ äº®åº¦ï¼ˆç›¸å¯¹å€¼ï¼‰ï¼Œ2-å‡å°‘äº®åº¦ï¼ˆç›¸å¯¹å€¼ï¼‰ï¼›
-*   _brï¼šäº®åº¦ï¼Œäº®åº¦å…·ä½“å€¼10-100
-*   _ntï¼šèŠ‚ç‚¹ç±»å‹(Node Type)ï¼Œä»…å½“_nid=255æ—¶æœ‰æ•ˆï¼Œé»˜è®¤ä¸º0
-*   _tpNumï¼š'tp'åˆ—è¡¨é•¿åº¦ï¼ˆNodeType æˆ– DevTypeï¼‰ï¼Œ0 åˆ° 4ï¼Œé»˜è®¤ä¸º0
-*   _tpListï¼š'tp'åˆ—è¡¨æŒ‡é’ˆï¼Œé»˜è®¤ä¸ºç©º
+*   _nid£º½ÚµãID£¬¾ßÌå½Úµã»òÕß255£»255±íÊ¾¹ã²¥£¬ÕâÊ±Í¨¹ıNodeTypeÉ¸Ñ¡Ä¿±ê½Úµã
+*   _op£º¿ØÖÆ·½Ê½£¬0-ÉèÖÃÁÁ¶ÈÖµ£¬1-Ôö¼ÓÁÁ¶È£¨Ïà¶ÔÖµ£©£¬2-¼õÉÙÁÁ¶È£¨Ïà¶ÔÖµ£©£»
+*   _br£ºÁÁ¶È£¬ÁÁ¶È¾ßÌåÖµ10-100
+*   _nt£º½ÚµãÀàĞÍ(Node Type)£¬½öµ±_nid=255Ê±ÓĞĞ§£¬Ä¬ÈÏÎª0
+*   _tpNum£º'tp'ÁĞ±í³¤¶È£¨NodeType »ò DevType£©£¬0 µ½ 4£¬Ä¬ÈÏÎª0
+*   _tpList£º'tp'ÁĞ±íÖ¸Õë£¬Ä¬ÈÏÎª¿Õ
 * @retval	
 ***************************************************************/
 void CActCmdInterface::AddCmd_BRControl(const UC _nid, const UC _sid, const UC _op, const UC _br, const UC _nt, const UC _tpNum, const UC *_tpList)
 {
-    // æŒ‡å‘å½“å‰å‘½ä»¤
+    // Ö¸Ïòµ±Ç°ÃüÁî
     cmdItem_t *lv_cmd = m_pCmdList + m_nCmdIndex;
 
-    lv_cmd->head.nid = _nid;                        // èŠ‚ç‚¹ID
-    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFå‘½ä»¤
-    rSet_ActCmd_rck(lv_cmd->head, 1);               // éœ€è¦å›åº”
-    lv_cmd->head.sensorType = V_PERCENTAGE;         // å‘½ä»¤ç±»å‹
-    lv_cmd->head.subID = _sid;                      // å­èŠ‚ç‚¹ID
-    lv_cmd->head.paramLen = sizeof(V_PERCENTAGE_t); // äº®åº¦è°ƒèŠ‚å‘½ä»¤å‚æ•°é•¿åº¦
+    lv_cmd->head.nid = _nid;                        // ½ÚµãID
+    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFÃüÁî
+    rSet_ActCmd_rck(lv_cmd->head, 1);               // ĞèÒª»ØÓ¦
+    lv_cmd->head.sensorType = V_PERCENTAGE;         // ÃüÁîÀàĞÍ
+    lv_cmd->head.subID = _sid;                      // ×Ó½ÚµãID
+    lv_cmd->head.paramLen = sizeof(V_PERCENTAGE_t); // ÁÁ¶Èµ÷½ÚÃüÁî²ÎÊı³¤¶È
     lv_cmd->body.percentage.type = _op;
     lv_cmd->body.percentage.br = _br;
 
-    // èŠ‚ç‚¹ç±»å‹
+    // ½ÚµãÀàĞÍ
     lv_cmd->head.nodeType = (_nid == 255 ? _nt : 0);
 
-    // 'tp'åˆ—è¡¨
+    // 'tp'ÁĞ±í
     addTpList(_nid, lv_cmd, _tpNum, _tpList);
 
-    // ä¸‹ä¸€æ¡
+    // ÏÂÒ»Ìõ
     m_nCmdIndex++;
 }
 
 /***************************************************************
 * @func		AddCmd_CCTControl
-* @brief    æ·»åŠ å‘½ä»¤ï¼šè°ƒèŠ‚ç¯çš„è‰²æ¸©
+* @brief    Ìí¼ÓÃüÁî£ºµ÷½ÚµÆµÄÉ«ÎÂ
 * @param
-*   _nidï¼šèŠ‚ç‚¹IDï¼Œå…·ä½“èŠ‚ç‚¹æˆ–è€…255ï¼›255è¡¨ç¤ºå¹¿æ’­ï¼Œè¿™æ—¶é€šè¿‡NodeTypeç­›é€‰ç›®æ ‡èŠ‚ç‚¹
-*   _opï¼šæ§åˆ¶æ–¹å¼ï¼Œ0-è®¾ç½®è‰²æ¸©å€¼ï¼Œ1-å¢åŠ è‰²æ¸©ï¼ˆç›¸å¯¹å€¼ï¼‰ï¼Œ2-å‡å°‘è‰²æ¸©ï¼ˆç›¸å¯¹å€¼ï¼‰ï¼›
-*   _cctï¼šè‰²æ¸©ï¼Œå…·ä½“è‰²æ¸©å€¼2700-6500å 2ä¸ªå­—èŠ‚ï¼Œé«˜8ä½åœ¨å‰ï¼Œä½8ä½åœ¨å
-*   _ntï¼šèŠ‚ç‚¹ç±»å‹(Node Type)ï¼Œä»…å½“_nid=255æ—¶æœ‰æ•ˆï¼Œé»˜è®¤ä¸º0
-*   _tpNumï¼š'tp'åˆ—è¡¨é•¿åº¦ï¼ˆNodeType æˆ– DevTypeï¼‰ï¼Œ0 åˆ° 4ï¼Œé»˜è®¤ä¸º0
-*   _tpListï¼š'tp'åˆ—è¡¨æŒ‡é’ˆï¼Œé»˜è®¤ä¸ºç©º
+*   _nid£º½ÚµãID£¬¾ßÌå½Úµã»òÕß255£»255±íÊ¾¹ã²¥£¬ÕâÊ±Í¨¹ıNodeTypeÉ¸Ñ¡Ä¿±ê½Úµã
+*   _op£º¿ØÖÆ·½Ê½£¬0-ÉèÖÃÉ«ÎÂÖµ£¬1-Ôö¼ÓÉ«ÎÂ£¨Ïà¶ÔÖµ£©£¬2-¼õÉÙÉ«ÎÂ£¨Ïà¶ÔÖµ£©£»
+*   _cct£ºÉ«ÎÂ£¬¾ßÌåÉ«ÎÂÖµ2700-6500Õ¼2¸ö×Ö½Ú£¬¸ß8Î»ÔÚÇ°£¬µÍ8Î»ÔÚºó
+*   _nt£º½ÚµãÀàĞÍ(Node Type)£¬½öµ±_nid=255Ê±ÓĞĞ§£¬Ä¬ÈÏÎª0
+*   _tpNum£º'tp'ÁĞ±í³¤¶È£¨NodeType »ò DevType£©£¬0 µ½ 4£¬Ä¬ÈÏÎª0
+*   _tpList£º'tp'ÁĞ±íÖ¸Õë£¬Ä¬ÈÏÎª¿Õ
 * @retval	
 ***************************************************************/
 void CActCmdInterface::AddCmd_CCTControl(const UC _nid, const UC _sid, const UC _op, const US _cct, const UC _nt, const UC _tpNum, const UC *_tpList)
 {
-    // æŒ‡å‘å½“å‰å‘½ä»¤
+    // Ö¸Ïòµ±Ç°ÃüÁî
     cmdItem_t *lv_cmd = m_pCmdList + m_nCmdIndex;
 
-    lv_cmd->head.nid = _nid;                        // èŠ‚ç‚¹ID
-    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFå‘½ä»¤
-    rSet_ActCmd_rck(lv_cmd->head, 1);               // éœ€è¦å›åº”
-    lv_cmd->head.sensorType = V_LEVEL;              // å‘½ä»¤ç±»å‹
-    lv_cmd->head.subID = _sid;                      // å­èŠ‚ç‚¹ID
-    lv_cmd->head.paramLen = sizeof(V_LEVEL_t);      // è‰²æ¸©è°ƒèŠ‚å‘½ä»¤å‚æ•°é•¿åº¦
+    lv_cmd->head.nid = _nid;                        // ½ÚµãID
+    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFÃüÁî
+    rSet_ActCmd_rck(lv_cmd->head, 1);               // ĞèÒª»ØÓ¦
+    lv_cmd->head.sensorType = V_LEVEL;              // ÃüÁîÀàĞÍ
+    lv_cmd->head.subID = _sid;                      // ×Ó½ÚµãID
+    lv_cmd->head.paramLen = sizeof(V_LEVEL_t);      // É«ÎÂµ÷½ÚÃüÁî²ÎÊı³¤¶È
     lv_cmd->body.cct.type = _op;
     lv_cmd->body.cct.cct = _cct;
 
-    // èŠ‚ç‚¹ç±»å‹
+    // ½ÚµãÀàĞÍ
     lv_cmd->head.nodeType = (_nid == 255 ? _nt : 0);
 
-    // 'tp'åˆ—è¡¨
+    // 'tp'ÁĞ±í
     addTpList(_nid, lv_cmd, _tpNum, _tpList);
 
-    // ä¸‹ä¸€æ¡
+    // ÏÂÒ»Ìõ
     m_nCmdIndex++;
 }
 
 /***************************************************************
 * @func		AddCmd_LightControl
-* @brief    æ·»åŠ å‘½ä»¤ï¼šè°ƒèŠ‚ç¯äº®åº¦å’Œè‰²æ¸©å‘½ä»¤
+* @brief    Ìí¼ÓÃüÁî£ºµ÷½ÚµÆÁÁ¶ÈºÍÉ«ÎÂÃüÁî
 * @param
-*   _nidï¼šèŠ‚ç‚¹IDï¼Œå…·ä½“èŠ‚ç‚¹æˆ–è€…255ï¼›255è¡¨ç¤ºå¹¿æ’­ï¼Œè¿™æ—¶é€šè¿‡NodeTypeç­›é€‰ç›®æ ‡èŠ‚ç‚¹
-*   _swï¼šå¼€å…³ï¼Œ0-å…³ï¼Œ1-å¼€ï¼Œ2-åˆ‡æ¢ï¼›
-*   _brï¼šäº®åº¦ï¼Œäº®åº¦å…·ä½“å€¼10-100
-*   _cctï¼šè‰²æ¸©ï¼Œå…·ä½“è‰²æ¸©å€¼2700-6500å 2ä¸ªå­—èŠ‚ï¼Œé«˜8ä½åœ¨å‰ï¼Œä½8ä½åœ¨å
-*   _ntï¼šèŠ‚ç‚¹ç±»å‹(Node Type)ï¼Œä»…å½“_nid=255æ—¶æœ‰æ•ˆï¼Œé»˜è®¤ä¸º0
-*   _tpNumï¼š'tp'åˆ—è¡¨é•¿åº¦ï¼ˆNodeType æˆ– DevTypeï¼‰ï¼Œ0 åˆ° 4ï¼Œé»˜è®¤ä¸º0
-*   _tpListï¼š'tp'åˆ—è¡¨æŒ‡é’ˆï¼Œé»˜è®¤ä¸ºç©º
+*   _nid£º½ÚµãID£¬¾ßÌå½Úµã»òÕß255£»255±íÊ¾¹ã²¥£¬ÕâÊ±Í¨¹ıNodeTypeÉ¸Ñ¡Ä¿±ê½Úµã
+*   _sw£º¿ª¹Ø£¬0-¹Ø£¬1-¿ª£¬2-ÇĞ»»£»
+*   _br£ºÁÁ¶È£¬ÁÁ¶È¾ßÌåÖµ10-100
+*   _cct£ºÉ«ÎÂ£¬¾ßÌåÉ«ÎÂÖµ2700-6500Õ¼2¸ö×Ö½Ú£¬¸ß8Î»ÔÚÇ°£¬µÍ8Î»ÔÚºó
+*   _nt£º½ÚµãÀàĞÍ(Node Type)£¬½öµ±_nid=255Ê±ÓĞĞ§£¬Ä¬ÈÏÎª0
+*   _tpNum£º'tp'ÁĞ±í³¤¶È£¨NodeType »ò DevType£©£¬0 µ½ 4£¬Ä¬ÈÏÎª0
+*   _tpList£º'tp'ÁĞ±íÖ¸Õë£¬Ä¬ÈÏÎª¿Õ
 * @retval	
 ***************************************************************/
 void CActCmdInterface::AddCmd_LightControl(const UC _nid, const UC _sid, const UC _sw, const UC _br, const US _cct, const UC _nt, const UC _tpNum, const UC *_tpList)
 {
-    // æŒ‡å‘å½“å‰å‘½ä»¤
+    // Ö¸Ïòµ±Ç°ÃüÁî
     cmdItem_t *lv_cmd = m_pCmdList + m_nCmdIndex;
 
-    lv_cmd->head.nid = _nid;                        // èŠ‚ç‚¹ID
-    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFå‘½ä»¤
-    rSet_ActCmd_rck(lv_cmd->head, 1);               // éœ€è¦å›åº”
-    lv_cmd->head.sensorType = V_RGBW;               // å‘½ä»¤ç±»å‹
-    lv_cmd->head.subID = _sid;                      // å­èŠ‚ç‚¹ID
-    lv_cmd->head.paramLen = sizeof(V_RGBW_t);       // V_RGBWå‘½ä»¤å‚æ•°é•¿åº¦
+    lv_cmd->head.nid = _nid;                        // ½ÚµãID
+    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFÃüÁî
+    rSet_ActCmd_rck(lv_cmd->head, 1);               // ĞèÒª»ØÓ¦
+    lv_cmd->head.sensorType = V_RGBW;               // ÃüÁîÀàĞÍ
+    lv_cmd->head.subID = _sid;                      // ×Ó½ÚµãID
+    lv_cmd->head.paramLen = sizeof(V_RGBW_t);       // V_RGBWÃüÁî²ÎÊı³¤¶È
     lv_cmd->body.sw_br_cct.ring = 0;
     lv_cmd->body.sw_br_cct.sw = _sw;
     lv_cmd->body.sw_br_cct.br = _br;
     lv_cmd->body.sw_br_cct.cct = _cct;
 
-    // èŠ‚ç‚¹ç±»å‹
+    // ½ÚµãÀàĞÍ
     lv_cmd->head.nodeType = (_nid == 255 ? _nt : 0);
 
-    // 'tp'åˆ—è¡¨
+    // 'tp'ÁĞ±í
     addTpList(_nid, lv_cmd, _tpNum, _tpList);
 
-    // ä¸‹ä¸€æ¡
+    // ÏÂÒ»Ìõ
     m_nCmdIndex++;
 }
 
 /***************************************************************
 * @func		AddCmd_APControl
-* @brief    æ·»åŠ å‘½ä»¤ï¼šæ–°é£æ§åˆ¶å‘½ä»¤
+* @brief    Ìí¼ÓÃüÁî£ºĞÂ·ç¿ØÖÆÃüÁî
 * @param
-*   _nidï¼šèŠ‚ç‚¹IDï¼Œå…·ä½“èŠ‚ç‚¹æˆ–è€…255ï¼›255è¡¨ç¤ºå¹¿æ’­ï¼Œè¿™æ—¶é€šè¿‡NodeTypeç­›é€‰ç›®æ ‡èŠ‚ç‚¹
-*   _swï¼šå¼€å…³ï¼Œ0-ä¸æ“ä½œ 1-å…³ 2-å¼€
-*   _speedï¼šæ¡£ä½ï¼Œ1-0æ¡£  2-1æ¡£  3-2æ¡£ 4-3æ¡£
-*   _ntï¼šèŠ‚ç‚¹ç±»å‹(Node Type)ï¼Œä»…å½“_nid=255æ—¶æœ‰æ•ˆï¼Œé»˜è®¤ä¸º0
-*   _tpNumï¼š'tp'åˆ—è¡¨é•¿åº¦ï¼ˆNodeType æˆ– DevTypeï¼‰ï¼Œ0 åˆ° 4ï¼Œé»˜è®¤ä¸º0
-*   _tpListï¼š'tp'åˆ—è¡¨æŒ‡é’ˆï¼Œé»˜è®¤ä¸ºç©º
+*   _nid£º½ÚµãID£¬¾ßÌå½Úµã»òÕß255£»255±íÊ¾¹ã²¥£¬ÕâÊ±Í¨¹ıNodeTypeÉ¸Ñ¡Ä¿±ê½Úµã
+*   _sw£º¿ª¹Ø£¬0-²»²Ù×÷ 1-¹Ø 2-¿ª
+*   _speed£ºµµÎ»£¬1-0µµ  2-1µµ  3-2µµ 4-3µµ
+*   _nt£º½ÚµãÀàĞÍ(Node Type)£¬½öµ±_nid=255Ê±ÓĞĞ§£¬Ä¬ÈÏÎª0
+*   _tpNum£º'tp'ÁĞ±í³¤¶È£¨NodeType »ò DevType£©£¬0 µ½ 4£¬Ä¬ÈÏÎª0
+*   _tpList£º'tp'ÁĞ±íÖ¸Õë£¬Ä¬ÈÏÎª¿Õ
 * @retval	
 ***************************************************************/
 void CActCmdInterface::AddCmd_APControl(const UC _nid, const UC _sid, const UC _sw, const UC _speed, const UC _nt, const UC _tpNum, const UC *_tpList)
 {
-    // æŒ‡å‘å½“å‰å‘½ä»¤
+    // Ö¸Ïòµ±Ç°ÃüÁî
     cmdItem_t *lv_cmd = m_pCmdList + m_nCmdIndex;
 
-    lv_cmd->head.nid = _nid;                        // èŠ‚ç‚¹ID
-    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFå‘½ä»¤
-    rSet_ActCmd_rck(lv_cmd->head, 1);               // éœ€è¦å›åº”
-    lv_cmd->head.sensorType = V_WIND;               // å‘½ä»¤ç±»å‹
-    lv_cmd->head.subID = _sid;                      // å­èŠ‚ç‚¹ID
-    lv_cmd->head.paramLen = sizeof(V_WIND_t);       // æ–°é£æ§åˆ¶å‘½ä»¤å‚æ•°é•¿åº¦
+    lv_cmd->head.nid = _nid;                        // ½ÚµãID
+    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFÃüÁî
+    rSet_ActCmd_rck(lv_cmd->head, 1);               // ĞèÒª»ØÓ¦
+    lv_cmd->head.sensorType = V_WIND;               // ÃüÁîÀàĞÍ
+    lv_cmd->head.subID = _sid;                      // ×Ó½ÚµãID
+    lv_cmd->head.paramLen = sizeof(V_WIND_t);       // ĞÂ·ç¿ØÖÆÃüÁî²ÎÊı³¤¶È
     lv_cmd->body.wind.sw = _sw;
     lv_cmd->body.wind.speed = _speed;
 
-    // èŠ‚ç‚¹ç±»å‹
+    // ½ÚµãÀàĞÍ
     lv_cmd->head.nodeType = (_nid == 255 ? _nt : 0);
 
-    // 'tp'åˆ—è¡¨
+    // 'tp'ÁĞ±í
     addTpList(_nid, lv_cmd, _tpNum, _tpList);
 
-    // ä¸‹ä¸€æ¡
+    // ÏÂÒ»Ìõ
     m_nCmdIndex++;
 }
 
 /***************************************************************
 * @func		AddCmd_ACControl
-* @note     æ³¨æ„ï¼šç©ºè°ƒä»£ç éœ€è¦äº‹å…ˆè®¾å®šå¥½
-* @brief    æ·»åŠ å‘½ä»¤ï¼šç©ºè°ƒæ§åˆ¶å‘½ä»¤
+* @note     ×¢Òâ£º¿Õµ÷´úÂëĞèÒªÊÂÏÈÉè¶¨ºÃ
+* @brief    Ìí¼ÓÃüÁî£º¿Õµ÷¿ØÖÆÃüÁî
 * @param
-*   _nidï¼šèŠ‚ç‚¹IDï¼Œå…·ä½“èŠ‚ç‚¹æˆ–è€…255ï¼›255è¡¨ç¤ºå¹¿æ’­ï¼Œè¿™æ—¶é€šè¿‡NodeTypeç­›é€‰ç›®æ ‡èŠ‚ç‚¹
-*   _swï¼šå¼€å…³ï¼Œ0-å…³ï¼Œ1-å¼€ï¼›
-*   _modeï¼šæ¨¡å¼ï¼Œ0-è‡ªåŠ¨ï¼Œ1-åˆ¶å†·ï¼Œ2-æŠ½æ¹¿ï¼Œ3-é€é£ï¼Œ4-åˆ¶çƒ­ï¼›
-*   _tempï¼šè®¾å®šæ¸©åº¦ï¼Œ16-32ï¼›
-*   _speedï¼šé£é€Ÿï¼Œ0-è‡ªåŠ¨ï¼Œ1-ä½ï¼Œ2-ä¸­ï¼Œ3-é«˜
-*   _codeï¼š ç©ºè°ƒä»£ç ï¼Œé«˜ä½åœ¨å‰
-*   _fantp_lightï¼š0-3, bit0: é£æ‰‡æ¨¡å¼: 1-è‡ªåŠ¨é£å‘ï¼Œ0-æ‰‹åŠ¨é£å‘ï¼›bit1: ç¯æ˜¾: 0-å…³ï¼Œ1-å¼€
-*   _ntï¼šèŠ‚ç‚¹ç±»å‹(Node Type)ï¼Œä»…å½“_nid=255æ—¶æœ‰æ•ˆï¼Œé»˜è®¤ä¸º0
-*   _tpNumï¼š'tp'åˆ—è¡¨é•¿åº¦ï¼ˆNodeType æˆ– DevTypeï¼‰ï¼Œ0 åˆ° 4ï¼Œé»˜è®¤ä¸º0
-*   _tpListï¼š'tp'åˆ—è¡¨æŒ‡é’ˆï¼Œé»˜è®¤ä¸ºç©º
+*   _nid£º½ÚµãID£¬¾ßÌå½Úµã»òÕß255£»255±íÊ¾¹ã²¥£¬ÕâÊ±Í¨¹ıNodeTypeÉ¸Ñ¡Ä¿±ê½Úµã
+*   _sw£º¿ª¹Ø£¬0-¹Ø£¬1-¿ª£»
+*   _mode£ºÄ£Ê½£¬0-×Ô¶¯£¬1-ÖÆÀä£¬2-³éÊª£¬3-ËÍ·ç£¬4-ÖÆÈÈ£»
+*   _temp£ºÉè¶¨ÎÂ¶È£¬16-32£»
+*   _speed£º·çËÙ£¬0-×Ô¶¯£¬1-µÍ£¬2-ÖĞ£¬3-¸ß
+*   _code£º ¿Õµ÷´úÂë£¬¸ßÎ»ÔÚÇ°
+*   _fantp_light£º0-3, bit0: ·çÉÈÄ£Ê½: 1-×Ô¶¯·çÏò£¬0-ÊÖ¶¯·çÏò£»bit1: µÆÏÔ: 0-¹Ø£¬1-¿ª
+*   _nt£º½ÚµãÀàĞÍ(Node Type)£¬½öµ±_nid=255Ê±ÓĞĞ§£¬Ä¬ÈÏÎª0
+*   _tpNum£º'tp'ÁĞ±í³¤¶È£¨NodeType »ò DevType£©£¬0 µ½ 4£¬Ä¬ÈÏÎª0
+*   _tpList£º'tp'ÁĞ±íÖ¸Õë£¬Ä¬ÈÏÎª¿Õ
 * @retval	
 ***************************************************************/
 void CActCmdInterface::AddCmd_ACControl(const UC _nid, const UC _sid, const UC _sw, const UC _mode, const UC _temp, const UC _speed, const US _code, const UC _fantp_light, const UC _nt, const UC _tpNum, const UC *_tpList)
 {
-    // æŒ‡å‘å½“å‰å‘½ä»¤
+    // Ö¸Ïòµ±Ç°ÃüÁî
     cmdItem_t *lv_cmd = m_pCmdList + m_nCmdIndex;
 
-    lv_cmd->head.nid = _nid;                        // èŠ‚ç‚¹ID
-    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFå‘½ä»¤
-    rSet_ActCmd_rck(lv_cmd->head, 1);               // éœ€è¦å›åº”
-    lv_cmd->head.sensorType = V_HVAC_FLOW_STATE;    // å‘½ä»¤ç±»å‹
-    lv_cmd->head.subID = _sid;                      // å­èŠ‚ç‚¹ID
-    lv_cmd->head.paramLen = sizeof(V_HVAC_FLOW_STATE_t); // ç©ºè°ƒæ§åˆ¶å‘½ä»¤å‚æ•°é•¿åº¦
+    lv_cmd->head.nid = _nid;                        // ½ÚµãID
+    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFÃüÁî
+    rSet_ActCmd_rck(lv_cmd->head, 1);               // ĞèÒª»ØÓ¦
+    lv_cmd->head.sensorType = V_HVAC_FLOW_STATE;    // ÃüÁîÀàĞÍ
+    lv_cmd->head.subID = _sid;                      // ×Ó½ÚµãID
+    lv_cmd->head.paramLen = sizeof(V_HVAC_FLOW_STATE_t); // ¿Õµ÷¿ØÖÆÃüÁî²ÎÊı³¤¶È
     lv_cmd->body.hvac.code = _code;
     lv_cmd->body.hvac.sw = _sw;
     lv_cmd->body.hvac.mode = _mode;
@@ -302,60 +307,104 @@ void CActCmdInterface::AddCmd_ACControl(const UC _nid, const UC _sid, const UC _
     lv_cmd->body.hvac.speed = _speed;
     lv_cmd->body.hvac.fantp_light = _fantp_light;
 
-    // èŠ‚ç‚¹ç±»å‹
+    // ½ÚµãÀàĞÍ
     lv_cmd->head.nodeType = (_nid == 255 ? _nt : 0);
 
-    // 'tp'åˆ—è¡¨
+    // 'tp'ÁĞ±í
     addTpList(_nid, lv_cmd, _tpNum, _tpList);
 
-    // ä¸‹ä¸€æ¡
+    // ÏÂÒ»Ìõ
+    m_nCmdIndex++;
+}
+
+/***************************************************************
+* @func		AddCmd_RelayString
+* @brief    Ìí¼ÓÃüÁî£º¼ÌµçÆ÷(´°Á±)²Ù×÷×éºÏ
+* @param
+*   _nid£º½ÚµãID£¬¾ßÌå½Úµã»òÕß255£»255±íÊ¾¹ã²¥£¬ÕâÊ±Í¨¹ıNodeTypeÉ¸Ñ¡Ä¿±ê½Úµã
+*   _type£ºÃüÁîÀàĞÍ£¬°üÀ¨£ºV_UP, V_DOWN, V_STOP
+*   _strLen£º¼ÌµçÆ÷²Ù×÷×éºÏ×Ö·û´®³¤¶È£¬´æ·ÅÔÚPayloadµÚÒ»¸ö×Ö½Ú
+*   _pStr£º¼ÌµçÆ÷²Ù×÷×éºÏ×Ö·û´®£¬´ÓPayloadµÄµÚ¶ş¸ö×Ö½Ú¿ªÊ¼£¬²Î¼û£º¼ÌµçÆ÷²Ù×÷×éºÏ×Ö·û´®ËµÃ÷
+*   _nt£º½ÚµãÀàĞÍ(Node Type)£¬½öµ±_nid=255Ê±ÓĞĞ§£¬Ä¬ÈÏÎª0
+*   _tpNum£º'tp'ÁĞ±í³¤¶È£¨NodeType »ò DevType£©£¬0 µ½ 4£¬Ä¬ÈÏÎª0
+*   _tpList£º'tp'ÁĞ±íÖ¸Õë£¬Ä¬ÈÏÎª¿Õ
+*  
+*  ¼ÌµçÆ÷²Ù×÷×éºÏ×Ö·û´®ËµÃ÷£ºlist of key pairs. One pair contains two charactors.
+*  The first character stands for key operation style, e.g. press, quick-press, long-press, hold, release, double-click.
+*  The second one is the key id ('0'-'9', 'a'-'z', 'A'-'Z'). 
+*  If there are more than one key, the delimitator determines the interval between keys.
+*  "+":no delay; ",":small pause; ".": normal pause; "=": long pause;  "~": very long pause; "_": same time
+*
+* @retval	
+***************************************************************/
+void CActCmdInterface::AddCmd_RelayString(const UC _nid, const UC _sid, const UC _type, const UC _strLen, const char *_pStr, const UC _nt, const UC _tpNum, const UC *_tpList )
+{
+    // Ö¸Ïòµ±Ç°ÃüÁî
+    cmdItem_t *lv_cmd = m_pCmdList + m_nCmdIndex;
+
+    lv_cmd->head.nid = _nid;                        // ½ÚµãID
+    rSet_ActCmd_cmd(lv_cmd->head, C_SET);           // RFÃüÁî
+    rSet_ActCmd_rck(lv_cmd->head, 1);               // ĞèÒª»ØÓ¦
+    lv_cmd->head.sensorType = _type;                // ÃüÁîÀàĞÍ
+    lv_cmd->head.subID = _sid;                      // ×Ó½ÚµãID
+    lv_cmd->head.paramLen = _strLen + 1;            // ×Ö·û´®³¤¶È¼ÓÉÏ³¤¶È×Ö½Ú
+    lv_cmd->body.data[0] = _strLen;
+    memcpy(lv_cmd->body.data + 1, _pStr, _strLen);
+
+    // ½ÚµãÀàĞÍ
+    lv_cmd->head.nodeType = (_nid == 255 ? _nt : 0);
+
+    // 'tp'ÁĞ±í
+    addTpList(_nid, lv_cmd, _tpNum, _tpList);
+
+    // ÏÂÒ»Ìõ
     m_nCmdIndex++;
 }
 
 /***************************************************************
 * @func		AddCmd_CustomMessage
-* @brief    æ·»åŠ å‘½ä»¤ï¼šå®¢æˆ·åŒ–æ¶ˆæ¯å‘½ä»¤ï¼Œç”¨æˆ·å¯è‡ªç”±è®¾å®šæ¶ˆæ¯å†…å®¹ï¼Œä»¥æ”¯æŒå„ç§éå¸¸è§„ç”¨é€”
+* @brief    Ìí¼ÓÃüÁî£º¿Í»§»¯ÏûÏ¢ÃüÁî£¬ÓÃ»§¿É×ÔÓÉÉè¶¨ÏûÏ¢ÄÚÈİ£¬ÒÔÖ§³Ö¸÷ÖÖ·Ç³£¹æÓÃÍ¾
 * @param
-*   _nidï¼šèŠ‚ç‚¹IDï¼Œå…·ä½“èŠ‚ç‚¹æˆ–è€…255ï¼›255è¡¨ç¤ºå¹¿æ’­ï¼Œè¿™æ—¶é€šè¿‡NodeTypeç­›é€‰ç›®æ ‡èŠ‚ç‚¹
-*   _sidï¼šå­èŠ‚ç‚¹ID
-*   _cmdï¼šRFå‘½ä»¤
-*   _typeï¼šå‘½ä»¤ç±»å‹
-*   _pPaylï¼špayloadå†…å®¹ï¼ˆå­—èŠ‚æ•°ç»„ï¼‰
-*   _lenPaylï¼špayloadå­—èŠ‚æ•°
-*   _ntï¼šèŠ‚ç‚¹ç±»å‹(Node Type)ï¼Œä»…å½“_nid=255æ—¶æœ‰æ•ˆï¼Œé»˜è®¤ä¸º0
-*   _tpNumï¼š'tp'åˆ—è¡¨é•¿åº¦ï¼ˆNodeType æˆ– DevTypeï¼‰ï¼Œ0 åˆ° 4ï¼Œé»˜è®¤ä¸º0
-*   _tpListï¼š'tp'åˆ—è¡¨æŒ‡é’ˆï¼Œé»˜è®¤ä¸ºç©º
+*   _nid£º½ÚµãID£¬¾ßÌå½Úµã»òÕß255£»255±íÊ¾¹ã²¥£¬ÕâÊ±Í¨¹ıNodeTypeÉ¸Ñ¡Ä¿±ê½Úµã
+*   _sid£º×Ó½ÚµãID
+*   _cmd£ºRFÃüÁî
+*   _type£ºÃüÁîÀàĞÍ
+*   _pPayl£ºpayloadÄÚÈİ£¨×Ö½ÚÊı×é£©
+*   _lenPayl£ºpayload×Ö½ÚÊı
+*   _nt£º½ÚµãÀàĞÍ(Node Type)£¬½öµ±_nid=255Ê±ÓĞĞ§£¬Ä¬ÈÏÎª0
+*   _tpNum£º'tp'ÁĞ±í³¤¶È£¨NodeType »ò DevType£©£¬0 µ½ 4£¬Ä¬ÈÏÎª0
+*   _tpList£º'tp'ÁĞ±íÖ¸Õë£¬Ä¬ÈÏÎª¿Õ
 * @retval	
 ***************************************************************/
 void CActCmdInterface::AddCmd_CustomMessage(const UC _nid, const UC _sid, const UC _cmd, const UC _type, const UC *_pPayl, const UC _lenPayl, const UC _nt, const UC _tpNum, const UC *_tpList)
 {
-    // æŒ‡å‘å½“å‰å‘½ä»¤
+    // Ö¸Ïòµ±Ç°ÃüÁî
     cmdItem_t *lv_cmd = m_pCmdList + m_nCmdIndex;
 
-    lv_cmd->head.nid = _nid;                        // èŠ‚ç‚¹ID
-    rSet_ActCmd_cmd(lv_cmd->head, _cmd);            // RFå‘½ä»¤
-    rSet_ActCmd_rck(lv_cmd->head, 1);               // éœ€è¦å›åº”
-    lv_cmd->head.sensorType = _type;                // å‘½ä»¤ç±»å‹
-    lv_cmd->head.subID = _sid;                      // å­èŠ‚ç‚¹ID
-    lv_cmd->head.paramLen = (_lenPayl < 12 ? _lenPayl : 12);    // æŒ‡å®šé•¿åº¦
-    // å¤åˆ¶payloadå†…å®¹
+    lv_cmd->head.nid = _nid;                        // ½ÚµãID
+    rSet_ActCmd_cmd(lv_cmd->head, _cmd);            // RFÃüÁî
+    rSet_ActCmd_rck(lv_cmd->head, 1);               // ĞèÒª»ØÓ¦
+    lv_cmd->head.sensorType = _type;                // ÃüÁîÀàĞÍ
+    lv_cmd->head.subID = _sid;                      // ×Ó½ÚµãID
+    lv_cmd->head.paramLen = (_lenPayl < 12 ? _lenPayl : 12);    // Ö¸¶¨³¤¶È
+    // ¸´ÖÆpayloadÄÚÈİ
     memcpy(lv_cmd->body.data, _pPayl, lv_cmd->head.paramLen);
 
-    // èŠ‚ç‚¹ç±»å‹
+    // ½ÚµãÀàĞÍ
     lv_cmd->head.nodeType = (_nid == 255 ? _nt : 0);
 
-    // 'tp'åˆ—è¡¨
+    // 'tp'ÁĞ±í
     addTpList(_nid, lv_cmd, _tpNum, _tpList);
 
-    // ä¸‹ä¸€æ¡
+    // ÏÂÒ»Ìõ
     m_nCmdIndex++;
 }
 
-// ç§æœ‰å‡½æ•°ï¼šæ·»åŠ 'tp'åˆ—è¡¨
+// Ë½ÓĞº¯Êı£ºÌí¼Ó'tp'ÁĞ±í
 BOOL CActCmdInterface::addTpList(const UC _nid, cmdItem_t *_pCmd, const UC _tpNum, const UC *_tpList)
 {
-    if( _nid == 255 || IS_GROUP_NODEID(_nid) ) {    // å¹¿æ’­æˆ–ç»„æ’­æ¶ˆæ¯æ‰ä½¿ç”¨'tp'åˆ—è¡¨
-        if( _tpNum <= 4 ) {                         // 'tp'åˆ—è¡¨é•¿åº¦ï¼ˆ0-4ï¼‰
+    if( _nid == 255 || IS_GROUP_NODEID(_nid) ) {    // ¹ã²¥»ò×é²¥ÏûÏ¢²ÅÊ¹ÓÃ'tp'ÁĞ±í
+        if( _tpNum <= 4 ) {                         // 'tp'ÁĞ±í³¤¶È£¨0-4£©
             rSet_ActCmd_ldt(_pCmd->head, _tpNum);
             if( _tpNum > 0 ) {
                 memcpy(_pCmd->body.data + _pCmd->head.paramLen, _tpList, _tpNum);
@@ -367,18 +416,18 @@ BOOL CActCmdInterface::addTpList(const UC _nid, cmdItem_t *_pCmd, const UC _tpNu
     return false;
 }
 
-// ç”Ÿæˆå‘½ä»¤å­—ç¬¦ä¸²ï¼šè¿”å›å­—ç¬¦ä¸²æŒ‡é’ˆå’Œé•¿åº¦
+// Éú³ÉÃüÁî×Ö·û´®£º·µ»Ø×Ö·û´®Ö¸ÕëºÍ³¤¶È
 US CActCmdInterface::Build(char **_pstrActCmd)
 {
-    // è®¡ç®—crc16
+    // ¼ÆËãcrc16
     US lv_crc16 = usCRC16(m_msg + SCMSG_HEADER_LEN, m_nPayloadLen);
     m_msg[7] = lv_crc16 >> 8;
     m_msg[8] = lv_crc16 & 0xFF;
 
-    // å­—èŠ‚æ•°ç»„ è½¬ Hexå­—ç¬¦ä¸²ï¼ˆæ³¨æ„ï¼šé•¿åº¦ç¿»å€ï¼‰
+    // ×Ö½ÚÊı×é ×ª Hex×Ö·û´®£¨×¢Òâ£º³¤¶È·­±¶£©
     ByteToString(m_msg, m_strOutput, GetMsgLen());
 
-    // è¿”å›å­—ç¬¦ä¸²æŒ‡é’ˆå’Œé•¿åº¦
+    // ·µ»Ø×Ö·û´®Ö¸ÕëºÍ³¤¶È
     *_pstrActCmd = m_strOutput;
     return(GetMsgStringLen());
 }

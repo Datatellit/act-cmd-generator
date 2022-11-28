@@ -9,15 +9,15 @@ int main()
     char *lv_str;
 
     //------------------------------------------------------------------
-    // Step 1: åˆå§‹åŒ–ï¼Œè¯·è¾“å…¥å‚æ•°
-    // --> è¦ç”ŸæˆAct-cmdå‘½ä»¤ç»„çš„uidï¼Œéœ€è¦ä¸Action uidå¯¹åº”(1åˆ°64ä¹‹é—´)
-    // --> è¦ç”ŸæˆAct-cmdå‘½ä»¤ç»„åŒ…å«çš„å‘½ä»¤æ•°é‡(1è‡³16ä¹‹é—´)
-    // --> ç¤ºä¾‹ï¼šuid = 1, cmdCount = 3
+    // Step 1: ³õÊ¼»¯£¬ÇëÊäÈë²ÎÊı
+    // --> ÒªÉú³ÉAct-cmdÃüÁî×éµÄuid£¬ĞèÒªÓëAction uid¶ÔÓ¦(1µ½64Ö®¼ä)
+    // --> ÒªÉú³ÉAct-cmdÃüÁî×é°üº¬µÄÃüÁîÊıÁ¿(1ÖÁ16Ö®¼ä)
+    // --> Ê¾Àı£ºuid = 1, cmdCount = 3
     //lv_actCmd.Init(1, 3);
 
     //------------------------------------------------------------------
-    // Step 2: ä¾æ¬¡æ·»åŠ å‘½ä»¤ï¼Œæ€»æ•°å°±æ˜¯ä¸Šé¢åˆå§‹åŒ–æ—¶è¾“å…¥çš„
-    // --> ç¤ºä¾‹ï¼šç¬¬1æ¡å‘½ä»¤ï¼Œè°ƒèŠ‚ç¯èŠ‚ç‚¹8äº®åº¦å’Œè‰²æ¸©
+    // Step 2: ÒÀ´ÎÌí¼ÓÃüÁî£¬×ÜÊı¾ÍÊÇÉÏÃæ³õÊ¼»¯Ê±ÊäÈëµÄ
+    // --> Ê¾Àı£ºµÚ1ÌõÃüÁî£¬µ÷½ÚµÆ½Úµã8ÁÁ¶ÈºÍÉ«ÎÂ
     //lv_actCmd.AddCmd_LightControl(8, 0, DEVICE_SW_ON, 65, 3500);
     
     lv_actCmd.Init(1, 1);
@@ -69,30 +69,35 @@ int main()
     lv_actCmd.AddCmd_LightControl(17, 0, DEVICE_SW_ON, 80, 6500);
     */
 
-    // --> ç¤ºä¾‹ï¼šå»¶æ—¶15åˆ†é’Ÿå…³ç¯
+    // --> Ê¾Àı£ºÑÓÊ±15·ÖÖÓ¹ØµÆ
     lv_actCmd.AddCmd_SetState(9, 0, V_STATUS, DEVICE_SW_OFF, TM_MINUTE_UNIT, 15);
 
-    // --> ç¤ºä¾‹ï¼šç¬¬2æ¡å‘½ä»¤ï¼Œè°ƒèŠ‚å…¨éƒ¨ç©ºè°ƒèŠ‚ç‚¹
+    // --> Ê¾Àı£ºµÚ2ÌõÃüÁî£¬µ÷½ÚÈ«²¿¿Õµ÷½Úµã
     //lv_actCmd.AddCmd_ACControl(255, 0, 1, 1, 23, 1, 237, 0, NODE_TYP_AC);
 
-    // --> ç¤ºä¾‹ï¼šç¬¬3æ¡å‘½ä»¤ï¼Œå…³é—­å…¨éƒ¨é£æ‰‡ã€æ–°é£èŠ‚ç‚¹
+    // --> Ê¾Àı£ºµÚ3ÌõÃüÁî£¬¹Ø±ÕÈ«²¿·çÉÈ¡¢ĞÂ·ç½Úµã
     //lv_tp[0] = NODE_TYP_FAN;
     //lv_tp[1] = NODE_TYP_AIRPURE;
     //lv_actCmd.AddCmd_SetState(255, 0, V_STATUS, DEVICE_SW_OFF, 0, 0, 0, 2, lv_tp);
 
-    // --> ç¤ºä¾‹ï¼šå®¢æˆ·åŒ–å‘½ä»¤ï¼Œç»§ç”µå™¨æ§åˆ¶åºåˆ—ï¼ˆe.g. çª—å¸˜æ§åˆ¶ï¼‰
+    // --> Ê¾Àı£º¿Í»§»¯ÃüÁî£¬¼ÌµçÆ÷¿ØÖÆĞòÁĞ£¨e.g. ´°Á±¿ØÖÆ£©
     //const UC lv_payload[] = {5, 'p', '2', '_', 'p', '3'};
     //const UC lv_payLoadLen = sizeof(lv_payload);
     //lv_actCmd.AddCmd_CustomMessage(148, 0, C_SET, V_DOWN, lv_payload, lv_payLoadLen);
 
-    //...æ›´å¤šå‘½ä»¤...
-	// --> ç¤ºä¾‹ï¼šå®¢æˆ·åŒ–å‘½ä»¤ï¼Œç»§ç”µå™¨å¼€å…³ï¼ˆe.g. ç©ºå¼€æ§åˆ¶ï¼‰
-    const UC lv_payload[] = {0x01};		// ModBus SlaveID
-    const UC lv_payLoadLen = sizeof(lv_payload);
-    lv_actCmd.AddCmd_CustomMessage(185, 0, C_SET, V_RELAY_ON, lv_payload, lv_payLoadLen);
-    lv_actCmd.AddCmd_CustomMessage(185, 0, C_SET, V_RELAY_OFF, lv_payload, lv_payLoadLen);
+    // --> Ê¾Àı£º¼ÌµçÆ÷(´°Á±)²Ù×÷×éºÏ
+    //const char lv_relayStr[] = "p1,p2";
+    //const UC lv_relayStrLen = strlen(lv_relayStr);
+    //lv_actCmd.AddCmd_RelayString(148, 0, V_UP, lv_relayStrLen, lv_relayStr);
 
-	// --> ç¤ºä¾‹ï¼šå®¢æˆ·åŒ–å‘½ä»¤ï¼ŒModBuså†™å¯„å­˜å™¨
+    //...¸ü¶àÃüÁî...
+	// --> Ê¾Àı£º¿Í»§»¯ÃüÁî£¬¼ÌµçÆ÷¿ª¹Ø£¨e.g. ¿Õ¿ª¿ØÖÆ£©
+    //const UC lv_payload[] = {0x01};		// ModBus SlaveID
+    //const UC lv_payLoadLen = sizeof(lv_payload);
+    //lv_actCmd.AddCmd_CustomMessage(185, 0, C_SET, V_RELAY_ON, lv_payload, lv_payLoadLen);
+    //lv_actCmd.AddCmd_CustomMessage(185, 0, C_SET, V_RELAY_OFF, lv_payload, lv_payLoadLen);
+
+	// --> Ê¾Àı£º¿Í»§»¯ÃüÁî£¬ModBusĞ´¼Ä´æÆ÷
     // [addr][regH][regL][len]...
     //const UC lv_payload[] = {0x01, 0x9E, 0x10, 0x01, 0x00, 0x01};
     //const UC lv_payload[] = {0x01, 0x9E, 0x10, 0x01, 0x00, 0x04};
@@ -100,11 +105,11 @@ int main()
     //lv_actCmd.AddCmd_CustomMessage(185, 0, C_SET, V_MODBUS_WRITE, lv_payload, lv_payLoadLen);
     
     //------------------------------------------------------------------
-    // Step 3: ç”Ÿæˆæ¶ˆæ¯
+    // Step 3: Éú³ÉÏûÏ¢
     lv_actCmd.Build(&lv_str);
 
     //------------------------------------------------------------------
-    // ç»“æœè¾“å‡ºã€æ˜¾ç¤º
+    // ½á¹ûÊä³ö¡¢ÏÔÊ¾
     printf("uid: %d, cmd-count: %d, msg-len: %d, payload-len: %d, streamStr-len: %d\r\n", lv_actCmd.GetUID(), 
         lv_actCmd.GetCmdCount(), lv_actCmd.GetMsgLen(), lv_actCmd.GetPayloadLen(), lv_actCmd.GetMsgStringLen());
     printf("streamStr: %s\r\n", lv_str);

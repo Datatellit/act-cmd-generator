@@ -12,7 +12,7 @@
 #define ACT_CMD_MSG_HEAD_0              'C'
 #define ACT_CMD_MSG_HEAD_1              'F'
 
-// Act-cmd å‘½ä»¤ç”Ÿæˆå™¨æ¥å£
+// Act-cmd ÃüÁîÉú³ÉÆ÷½Ó¿Ú
 class CActCmdInterface
 {
 public:
@@ -21,70 +21,73 @@ public:
     //------------------------------------------------------------------
     // Step 1
     //------------------------------------------------------------------
-    // æ¥å£åˆå§‹åŒ–ï¼šæ¯æ¬¡ç”Ÿæˆæ–°çš„act-cmdå‘½ä»¤åˆ—è¡¨å‰è°ƒç”¨
+    // ½Ó¿Ú³õÊ¼»¯£ºÃ¿´ÎÉú³ÉĞÂµÄact-cmdÃüÁîÁĞ±íÇ°µ÷ÓÃ
     void Init(const UC _uid, const UC _cmdCnt);
 
     //------------------------------------------------------------------
     // Step 2
     //------------------------------------------------------------------
-    // æ·»åŠ å‘½ä»¤ï¼šå¼€å…³çŠ¶æ€æ”¹å˜å‘½ä»¤
+    // Ìí¼ÓÃüÁî£º¿ª¹Ø×´Ì¬¸Ä±äÃüÁî
     void AddCmd_SetState(const UC _nid, const UC _sid, const UC _type, const UC _state, const UC _delayUnit = 0, const UC _delayTime = 0, const UC _nt = 0, const UC _tpNum = 0, const UC *_tpList = NULL);
 
-    // æ·»åŠ å‘½ä»¤ï¼šåœºæ™¯åˆ‡æ¢å‘½ä»¤ï¼ˆæ­¤æ—¶NodeIDæ— ä½œç”¨ï¼‰
+    // Ìí¼ÓÃüÁî£º³¡¾°ÇĞ»»ÃüÁî£¨´ËÊ±NodeIDÎŞ×÷ÓÃ£©
     void AddCmd_ChangeScenario(const UC _scenario);
 
-    // æ·»åŠ å‘½ä»¤ï¼šé£æ‰‡æ§åˆ¶å‘½ä»¤
+    // Ìí¼ÓÃüÁî£º·çÉÈ¿ØÖÆÃüÁî
     void AddCmd_FanControl(const UC _nid, const UC _sid, const UC _speed, const UC _nt = 0, const UC _tpNum = 0, const UC *_tpList = NULL);
 
-    // æ·»åŠ å‘½ä»¤ï¼šè°ƒèŠ‚ç¯çš„äº®åº¦
+    // Ìí¼ÓÃüÁî£ºµ÷½ÚµÆµÄÁÁ¶È
     void AddCmd_BRControl(const UC _nid, const UC _sid, const UC _op, const UC _br, const UC _nt = 0, const UC _tpNum = 0, const UC *_tpList = NULL);
 
-    // æ·»åŠ å‘½ä»¤ï¼šè°ƒèŠ‚ç¯çš„è‰²æ¸©
+    // Ìí¼ÓÃüÁî£ºµ÷½ÚµÆµÄÉ«ÎÂ
     void AddCmd_CCTControl(const UC _nid, const UC _sid, const UC _op, const US _cct, const UC _nt = 0, const UC _tpNum = 0, const UC *_tpList = NULL);
 
-    // æ·»åŠ å‘½ä»¤ï¼šè°ƒèŠ‚ç¯äº®åº¦å’Œè‰²æ¸©å‘½ä»¤
+    // Ìí¼ÓÃüÁî£ºµ÷½ÚµÆÁÁ¶ÈºÍÉ«ÎÂÃüÁî
     void AddCmd_LightControl(const UC _nid, const UC _sid, const UC _sw, const UC _br, const US _cct, const UC _nt = 0, const UC _tpNum = 0, const UC *_tpList = NULL);
 
-    // æ·»åŠ å‘½ä»¤ï¼šæ–°é£æ§åˆ¶
+    // Ìí¼ÓÃüÁî£ºĞÂ·ç¿ØÖÆ
     void AddCmd_APControl(const UC _nid, const UC _sid, const UC _sw, const UC _speed, const UC _nt = 0, const UC _tpNum = 0, const UC *_tpList = NULL);
 
-    // æ·»åŠ å‘½ä»¤ï¼šç©ºè°ƒæ§åˆ¶
+    // Ìí¼ÓÃüÁî£º¿Õµ÷¿ØÖÆ
     void AddCmd_ACControl(const UC _nid, const UC _sid, const UC _sw, const UC _mode, const UC _temp, const UC _speed, const US _code = 0, const UC _fantp_light = 0, const UC _nt = 0, const UC _tpNum = 0, const UC *_tpList = NULL);
 
-    // æ·»åŠ å‘½ä»¤ï¼šå®¢æˆ·åŒ–æ¶ˆæ¯
+    // Ìí¼ÓÃüÁî£º¼ÌµçÆ÷(´°Á±)²Ù×÷×éºÏ
+    void AddCmd_RelayString(const UC _nid, const UC _sid, const UC _type, const UC _strLen, const char *_pStr, const UC _nt = 0, const UC _tpNum = 0, const UC *_tpList = NULL);
+
+    // Ìí¼ÓÃüÁî£º¿Í»§»¯ÏûÏ¢
     void AddCmd_CustomMessage(const UC _nid, const UC _sid, const UC _cmd, const UC _type, const UC *_pPayl, const UC _lenPayl, const UC _nt = 0, const UC _tpNum = 0, const UC *_tpList = NULL);
 
     //------------------------------------------------------------------
     // Step 3
     //------------------------------------------------------------------
-    // ç”Ÿæˆå‘½ä»¤å­—ç¬¦ä¸²ï¼šè¿”å›å­—ç¬¦ä¸²æŒ‡é’ˆå’Œé•¿åº¦
+    // Éú³ÉÃüÁî×Ö·û´®£º·µ»Ø×Ö·û´®Ö¸ÕëºÍ³¤¶È
     US Build(char **_pstrActCmd);
 
     //------------------------------------------------------------------
-    // è¿”å›uid
+    // ·µ»Øuid
     UC GetUID() { return m_msg[6]; }
-    // è¿”å›act-cmdåˆ—è¡¨ä¸­çš„å‘½ä»¤æ•°é‡
+    // ·µ»Øact-cmdÁĞ±íÖĞµÄÃüÁîÊıÁ¿
     UC GetCmdCount() { return m_nCmdCnt; }
 
-    // è¿”å›act-cmdåˆ—è¡¨çš„å­—èŠ‚æ•°ï¼šå‘½ä»¤æ•°é‡ * ä¸€æ¡å‘½ä»¤å­—èŠ‚æ•°ï¼ˆ18å­—èŠ‚ï¼‰
+    // ·µ»Øact-cmdÁĞ±íµÄ×Ö½ÚÊı£ºÃüÁîÊıÁ¿ * Ò»ÌõÃüÁî×Ö½ÚÊı£¨18×Ö½Ú£©
     US GetPayloadLen() { return m_nPayloadLen; }
 
-    // è¿”å›å‘½ä»¤æ¶ˆæ¯æ€»é•¿åº¦ï¼šGetPayloadLen() + å‘½ä»¤æ¶ˆæ¯å¤´é•¿åº¦ï¼ˆ9å­—èŠ‚ï¼‰
+    // ·µ»ØÃüÁîÏûÏ¢×Ü³¤¶È£ºGetPayloadLen() + ÃüÁîÏûÏ¢Í·³¤¶È£¨9×Ö½Ú£©
     US GetMsgLen() { return(m_nPayloadLen + SCMSG_HEADER_LEN); }
 
-    // è¿”å›ç”Ÿæˆçš„å‘½ä»¤å­—ç¬¦ä¸²é•¿åº¦ï¼šå‘½ä»¤æ¶ˆæ¯æ€»é•¿åº¦ * 2
+    // ·µ»ØÉú³ÉµÄÃüÁî×Ö·û´®³¤¶È£ºÃüÁîÏûÏ¢×Ü³¤¶È * 2
     US GetMsgStringLen() { return strlen(m_strOutput); }
 
 private:
-    // æ·»åŠ 'tp'åˆ—è¡¨
+    // Ìí¼Ó'tp'ÁĞ±í
     BOOL addTpList(const UC _nid, cmdItem_t *_pCmd, const UC _tpNum, const UC *_tpList);
 
-    UC m_nCmdCnt;               // act-cmdåˆ—è¡¨ä¸­çš„å‘½ä»¤æ•°é‡
-    UC m_nCmdIndex;             // å½“å‰å‘½ä»¤åºå·ï¼Œä»0å¼€å§‹ï¼Œåˆ°_cmdCnt - 1ï¼Œè¯·ä¾æ¬¡æ·»åŠ 
-    US m_nPayloadLen;           // act-cmdåˆ—è¡¨çš„å­—èŠ‚æ•° = m_nCmdCnt * sizeof(cmdItem_t)
+    UC m_nCmdCnt;               // act-cmdÁĞ±íÖĞµÄÃüÁîÊıÁ¿
+    UC m_nCmdIndex;             // µ±Ç°ÃüÁîĞòºÅ£¬´Ó0¿ªÊ¼£¬µ½_cmdCnt - 1£¬ÇëÒÀ´ÎÌí¼Ó
+    US m_nPayloadLen;           // act-cmdÁĞ±íµÄ×Ö½ÚÊı = m_nCmdCnt * sizeof(cmdItem_t)
 
     //------------------------------------------------------------------
-    // æ¶ˆæ¯æ•°æ®ç»“æ„
+    // ÏûÏ¢Êı¾İ½á¹¹
     UC m_msg[SCMSG_HEADER_LEN + MAX_COMMAND_PER_ACTION * sizeof(cmdItem_t)];
     cmdItem_t *m_pCmdList;
     char m_strOutput[sizeof(m_msg) * 2 + 1];    

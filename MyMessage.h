@@ -143,9 +143,9 @@ typedef enum {
 
 	V_RELAY_ON = 65,        // Xlight relay on
 	V_RELAY_OFF,            // Xlight relay off
-	V_RELAY_MAP,						// Xlight relay keymap
-	V_REMOTE_KEY,						// Xlight remote
-	V_REMOTE_SCENARIO,			// Xlight remote scenario
+	V_RELAY_MAP,			// Xlight relay keymap
+    V_REMOTE_KEY,			// Xlight remote button trigger
+    V_REMOTE_SCENARIO = 68,	// Xlight remote scenario
 	V_FAN=69,               // FAN
 
 	V_MODBUS_READ = 80,     // Read ModBus Register
